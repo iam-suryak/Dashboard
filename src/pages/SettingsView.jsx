@@ -66,7 +66,7 @@ export default function SettingsView() {
             {/* Avatar Upload */}
             <div className="relative shrink-0">
               <div className="w-28 h-28 rounded-full bg-amber-200 border-4 border-white shadow-md flex items-center justify-center font-bold text-3xl text-amber-900">
-                CR
+                Sk
               </div>
               <button 
                 type="button"
