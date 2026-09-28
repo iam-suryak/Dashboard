@@ -217,14 +217,14 @@ export default function DashboardView({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <CreditCard 
               balance="$5,756"
-              cardHolder="Eddy Cusuma"
+              cardHolder="Surya"
               validThru="12/22"
               cardNumber="3778 **** **** 1234"
               variant="blue"
             />
             <CreditCard 
               balance="$5,756"
-              cardHolder="Eddy Cusuma"
+              cardHolder="Surya"
               validThru="12/22"
               cardNumber="3778 **** **** 5600"
               variant="white"

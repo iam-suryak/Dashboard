@@ -159,8 +159,8 @@ export default function AccountsView({ onSeeAllTransactions, onSeeAllCards }) {
           </div>
           <CreditCard 
             balance="$5,756"
-            cardHolder="Eddy Cusuma"
-            validThru="12/22"
+            cardHolder="Surya"
+            validThru="12/28"
             cardNumber="3778 **** **** 1234"
             variant="blue"
           />

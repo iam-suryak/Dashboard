@@ -102,7 +102,7 @@ export default function App() {
     'loans': 'Loans',
     'services': 'Services',
     'privileges': 'My Privileges',
-    'settings': 'Setting',
+    'settings': 'Settings',
   };
 
   const renderCurrentView = () => {

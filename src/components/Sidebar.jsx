@@ -23,7 +23,7 @@ export default function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen }) 
     { id: 'loans', label: 'Loans', icon: Landmark },
     { id: 'services', label: 'Services', icon: Wrench },
     { id: 'privileges', label: 'My Privileges', icon: Award },
-    { id: 'settings', label: 'Setting', icon: Settings },
+    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   return (

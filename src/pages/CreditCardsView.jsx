@@ -13,9 +13,9 @@ import { Doughnut } from 'react-chartjs-2';
 
 export default function CreditCardsView() {
   const [cards, setCards] = useState([
-    { balance: "$5,756", holder: "Eddy Cusuma", valid: "12/22", number: "3778 **** **** 1234", variant: "blue" },
-    { balance: "$5,756", holder: "Eddy Cusuma", valid: "12/22", number: "3778 **** **** 5600", variant: "white" },
-    { balance: "$3,210", holder: "Eddy Cusuma", valid: "09/25", number: "4532 **** **** 9087", variant: "dark" },
+    { balance: "$5,756", holder: "Surya", valid: "12/28", number: "3778 **** **** 1234", variant: "blue" },
+    { balance: "$5,756", holder: "Surya", valid: "12/28", number: "3778 **** **** 5600", variant: "white" },
+    { balance: "$3,210", holder: "Surya", valid: "09/25", number: "4532 **** **** 9087", variant: "dark" },
   ]);
 
   const [cardType, setCardType] = useState('Classic');
@@ -54,7 +54,7 @@ export default function CreditCardsView() {
 
     const newCard = {
       balance: "$1,000",
-      holder: nameOnCard || "Eddy Cusuma",
+      holder: nameOnCard || "Surya",
       valid: expDate || "12/28",
       number: cardNumber.length > 8 ? `${cardNumber.slice(0, 4)} **** **** ${cardNumber.slice(-4)}` : "8000 **** **** 9999",
       variant: cards.length % 2 === 0 ? "blue" : "dark"

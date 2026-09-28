@@ -82,15 +82,15 @@ export default function TransactionsView({ transactions = [], onAddCardClick }) 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <CreditCard 
               balance="$5,756"
-              cardHolder="Eddy Cusuma"
-              validThru="12/22"
+              cardHolder="Surya"
+              validThru="12/28"
               cardNumber="3778 **** **** 1234"
               variant="blue"
             />
             <CreditCard 
               balance="$5,756"
-              cardHolder="Eddy Cusuma"
-              validThru="12/22"
+              cardHolder="Surya"
+              validThru="12/28"
               cardNumber="3778 **** **** 5600"
               variant="white"
             />

@@ -7,11 +7,11 @@ export default function SettingsView() {
 
   // Form states
   const [formData, setFormData] = useState({
-    name: 'Eddy Cusuma',
-    userName: 'Eddy Cusuma',
-    email: 'eddy.cusuma@gmail.com',
+    name: 'Surya K',
+    userName: 'Surya',
+    email: 'Surya@gmail.com',
     password: '••••••••••••',
-    dob: '25 January 1990',
+    dob: '11 October 2003',
     presentAddress: 'San Jose, California, USA',
     permanentAddress: 'San Jose, California, USA',
     city: 'San Jose',
