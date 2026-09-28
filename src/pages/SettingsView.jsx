@@ -1,36 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Camera, CheckCircle2 } from 'lucide-react';
 
-export default function SettingsView() {
+export default function SettingsView({ userProfile, setUserProfile }) {
   const [activeTab, setActiveTab] = useState('profile');
   const [saved, setSaved] = useState(false);
+  const fileInputRef = useRef(null);
 
-  // Form states
+  // Local form state initialized from userProfile prop
   const [formData, setFormData] = useState({
-    name: 'Surya K',
-    userName: 'Surya',
-    email: 'Surya@gmail.com',
-    password: '••••••••••••',
-    dob: '11 October 2003',
-    presentAddress: 'San Jose, California, USA',
-    permanentAddress: 'San Jose, California, USA',
-    city: 'San Jose',
-    postalCode: '45962',
-    country: 'USA'
+    name: userProfile?.name || 'Surya K',
+    userName: userProfile?.userName || 'Surya',
+    email: userProfile?.email || 'Surya@gmail.com',
+    password: userProfile?.password || '••••••••••••',
+    dob: userProfile?.dob || '11 October 2003',
+    presentAddress: userProfile?.presentAddress || 'San Jose, California, USA',
+    permanentAddress: userProfile?.permanentAddress || 'San Jose, California, USA',
+    city: userProfile?.city || 'San Jose',
+    postalCode: userProfile?.postalCode || '45962',
+    country: userProfile?.country || 'USA'
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleAvatarClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      if (setUserProfile) {
+        setUserProfile(prev => ({
+          ...prev,
+          avatarUrl: imageUrl
+        }));
+      }
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (setUserProfile) {
+      setUserProfile(prev => ({
+        ...prev,
+        ...formData
+      }));
+    }
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };
 
   return (
     <div className="bg-white rounded-3xl p-6 lg:p-10 shadow-sm border border-slate-100 pb-10">
+      {/* Hidden Native File Input for Choosing Profile Picture */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept="image/*"
+        className="hidden"
+      />
+
       {/* Settings Navigation Tabs */}
       <div className="flex space-x-10 border-b border-slate-200 text-sm font-semibold text-slate-400 mb-8">
         <button
@@ -63,15 +98,32 @@ export default function SettingsView() {
       {activeTab === 'profile' && (
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-            {/* Avatar Upload */}
-            <div className="relative shrink-0">
-              <div className="w-28 h-28 rounded-full bg-amber-200 border-4 border-white shadow-md flex items-center justify-center font-bold text-3xl text-amber-900">
-                Sk
+            {/* Avatar Upload Container */}
+            <div 
+              className="relative shrink-0 cursor-pointer group"
+              onClick={handleAvatarClick}
+              title="Click to choose a new profile picture"
+            >
+              <div className="w-28 h-28 rounded-full bg-amber-200 border-4 border-white shadow-md flex items-center justify-center font-bold text-3xl text-amber-900 overflow-hidden relative transition-transform group-hover:scale-105">
+                {userProfile?.avatarUrl ? (
+                  <img 
+                    src={userProfile.avatarUrl} 
+                    alt="Profile Avatar" 
+                    className="w-full h-full object-cover" 
+                  />
+                ) : (
+                  'SK'
+                )}
+                {/* Overlay text on hover */}
+                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
+                  Change
+                </div>
               </div>
               <button 
                 type="button"
-                className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-md hover:bg-blue-700 transition-colors"
-                title="Change Avatar"
+                onClick={handleAvatarClick}
+                className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-md hover:bg-blue-700 transition-transform group-hover:scale-110"
+                title="Choose Profile Picture File"
               >
                 <Camera className="w-4 h-4" />
               </button>

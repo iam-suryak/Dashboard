@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search, Settings, Bell, Menu } from 'lucide-react';
 
-export default function Header({ title, onMenuToggle, onSettingsClick }) {
+export default function Header({ title, userProfile, onMenuToggle, onSettingsClick }) {
   return (
     <header className="h-20 bg-white border-b border-slate-200 px-6 lg:px-10 flex items-center justify-between sticky top-0 z-30">
       {/* Title & Mobile Menu Button */}
@@ -52,9 +52,18 @@ export default function Header({ title, onMenuToggle, onSettingsClick }) {
         {/* User Profile Avatar */}
         <div 
           onClick={onSettingsClick}
-          className="w-11 h-11 rounded-full bg-amber-200 border-2 border-amber-300 flex items-center justify-center font-bold text-amber-900 cursor-pointer shadow-sm hover:ring-2 hover:ring-blue-500 transition-all"
+          className="w-11 h-11 rounded-full bg-amber-200 border-2 border-amber-300 flex items-center justify-center font-bold text-amber-900 cursor-pointer shadow-sm hover:ring-2 hover:ring-blue-500 transition-all overflow-hidden relative"
+          title="Edit Profile"
         >
-          SK
+          {userProfile?.avatarUrl ? (
+            <img 
+              src={userProfile.avatarUrl} 
+              alt="Profile" 
+              className="w-full h-full object-cover" 
+            />
+          ) : (
+            'SK'
+          )}
         </div>
       </div>
     </header>

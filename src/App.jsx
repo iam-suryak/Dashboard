@@ -15,6 +15,21 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // User Profile State with Avatar Support
+  const [userProfile, setUserProfile] = useState({
+    name: 'Surya K',
+    userName: 'Surya',
+    email: 'Surya@gmail.com',
+    password: '••••••••••••',
+    dob: '11 October 2003',
+    presentAddress: 'San Jose, California, USA',
+    permanentAddress: 'San Jose, California, USA',
+    city: 'San Jose',
+    postalCode: '45962',
+    country: 'USA',
+    avatarUrl: null
+  });
+
   // Centralized Transactions State
   const [transactions, setTransactions] = useState([
     {
@@ -102,7 +117,7 @@ export default function App() {
     'loans': 'Loans',
     'services': 'Services',
     'privileges': 'My Privileges',
-    'settings': 'Settings',
+    'settings': 'Setting',
   };
 
   const renderCurrentView = () => {
@@ -142,7 +157,12 @@ export default function App() {
       case 'privileges':
         return <PrivilegesView />;
       case 'settings':
-        return <SettingsView />;
+        return (
+          <SettingsView 
+            userProfile={userProfile}
+            setUserProfile={setUserProfile}
+          />
+        );
       default:
         return (
           <DashboardView 
@@ -170,6 +190,7 @@ export default function App() {
         {/* Top Header */}
         <Header 
           title={pageTitles[activeTab] || 'Overview'}
+          userProfile={userProfile}
           onMenuToggle={() => setIsSidebarOpen(!isSidebarOpen)}
           onSettingsClick={() => setActiveTab('settings')}
         />
