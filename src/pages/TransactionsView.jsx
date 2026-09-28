@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
 import CreditCard from '../components/CreditCard';
-import { ArrowUpRight, ArrowDownLeft, Download, Plus } from 'lucide-react';
+import { 
+  ArrowUpRight, 
+  ArrowDownLeft, 
+  Download, 
+  Plus, 
+  CreditCard as CardIcon, 
+  DollarSign, 
+  Smartphone, 
+  Send 
+} from 'lucide-react';
 import { Bar } from 'react-chartjs-2';
 
-export default function TransactionsView({ onAddCardClick }) {
+export default function TransactionsView({ transactions = [], onAddCardClick }) {
   const [activeTab, setActiveTab] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -40,65 +49,15 @@ export default function TransactionsView({ onAddCardClick }) {
     }
   };
 
-  const transactionsData = [
-    {
-      id: '#12548796',
-      description: 'Spotify Subscription',
-      type: 'Shopping',
-      card: '3778 ****',
-      date: '28 Jan, 12:30 PM',
-      amount: -2500,
-      category: 'expense',
-      icon: ArrowUpRight,
-      iconBg: 'bg-red-50 text-red-500'
-    },
-    {
-      id: '#12548796',
-      description: 'Freepik Sales',
-      type: 'Transfer',
-      card: '3778 ****',
-      date: '25 Jan, 10:40 AM',
-      amount: 750,
-      category: 'income',
-      icon: ArrowDownLeft,
-      iconBg: 'bg-emerald-50 text-emerald-500'
-    },
-    {
-      id: '#12548796',
-      description: 'Mobile Service',
-      type: 'Service',
-      card: '3778 ****',
-      date: '20 Jan, 10:40 AM',
-      amount: -150,
-      category: 'expense',
-      icon: ArrowUpRight,
-      iconBg: 'bg-red-50 text-red-500'
-    },
-    {
-      id: '#12548796',
-      description: 'Wilson',
-      type: 'Transfer',
-      card: '3778 ****',
-      date: '15 Jan, 3:29 AM',
-      amount: -1050,
-      category: 'expense',
-      icon: ArrowUpRight,
-      iconBg: 'bg-red-50 text-red-500'
-    },
-    {
-      id: '#12548796',
-      description: 'Emily',
-      type: 'Transfer',
-      card: '3778 ****',
-      date: '14 Jan, 10:40 AM',
-      amount: 840,
-      category: 'income',
-      icon: ArrowDownLeft,
-      iconBg: 'bg-emerald-50 text-emerald-500'
-    }
-  ];
+  const renderIcon = (type, amount) => {
+    if (type === 'card') return <CardIcon className="w-4 h-4" />;
+    if (type === 'dollar') return <DollarSign className="w-4 h-4" />;
+    if (type === 'phone') return <Smartphone className="w-4 h-4" />;
+    if (type === 'send') return <Send className="w-4 h-4" />;
+    return amount > 0 ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />;
+  };
 
-  const filteredTransactions = transactionsData.filter(item => {
+  const filteredTransactions = transactions.filter(item => {
     if (activeTab === 'income') return item.category === 'income';
     if (activeTab === 'expense') return item.category === 'expense';
     return true;
@@ -194,14 +153,13 @@ export default function TransactionsView({ onAddCardClick }) {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredTransactions.map((tx, idx) => {
-                const Icon = tx.icon;
                 const isPositive = tx.amount > 0;
                 return (
                   <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
                     <td className="py-4">
                       <div className="flex items-center space-x-3">
                         <div className={`w-9 h-9 rounded-full flex items-center justify-center border border-slate-200 ${tx.iconBg}`}>
-                          <Icon className="w-4 h-4" />
+                          {renderIcon(tx.iconType, tx.amount)}
                         </div>
                         <span className="font-semibold text-slate-800">{tx.description}</span>
                       </div>
@@ -214,7 +172,7 @@ export default function TransactionsView({ onAddCardClick }) {
                       {isPositive ? `+$${tx.amount.toLocaleString()}` : `-$${Math.abs(tx.amount).toLocaleString()}`}
                     </td>
                     <td className="py-4 text-right">
-                      <button className="px-4 py-1.5 rounded-full border border-slate-300 text-xs font-semibold text-slate-700 hover:border-blue-600 hover:text-blue-600 transition-all flex items-center gap-1.5 ml-auto">
+                      <button className="px-4 py-1.5 rounded-full border border-slate-300 text-xs font-semibold text-slate-700 hover:border-blue-600 hover:text-blue-600 transition-all flex items-center gap-1.5 ml-auto active:scale-95">
                         <Download className="w-3.5 h-3.5" />
                         <span>Download</span>
                       </button>

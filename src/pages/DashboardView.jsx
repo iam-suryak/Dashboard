@@ -6,7 +6,10 @@ import {
   Smartphone, 
   Send, 
   ChevronRight,
-  CheckCircle2
+  CheckCircle2,
+  ArrowUpRight,
+  ArrowDownLeft,
+  Loader2
 } from 'lucide-react';
 
 import {
@@ -38,9 +41,15 @@ ChartJS.register(
   Filler
 );
 
-export default function DashboardView({ onSeeAllCards, onSeeAllTransactions }) {
+export default function DashboardView({ 
+  transactions = [], 
+  onSendMoney, 
+  onSeeAllCards, 
+  onSeeAllTransactions 
+}) {
   const [transferAmount, setTransferAmount] = useState('525.00');
   const [selectedUser, setSelectedUser] = useState(0);
+  const [isSending, setIsSending] = useState(false);
   const [transferSuccess, setTransferSuccess] = useState(false);
 
   // Quick transfer contacts
@@ -49,6 +58,23 @@ export default function DashboardView({ onSeeAllCards, onSeeAllTransactions }) {
     { name: 'Randy Press', role: 'Director', avatar: 'RP', bg: 'bg-blue-100 text-blue-600' },
     { name: 'Workman', role: 'Designer', avatar: 'W', bg: 'bg-teal-100 text-teal-600' },
   ];
+
+  // Map icon types to Lucide Components
+  const renderIcon = (type) => {
+    switch (type) {
+      case 'card':
+        return <CardIcon className="w-6 h-6" />;
+      case 'dollar':
+        return <DollarSign className="w-6 h-6" />;
+      case 'phone':
+        return <Smartphone className="w-6 h-6" />;
+      case 'income':
+        return <ArrowDownLeft className="w-6 h-6" />;
+      case 'send':
+      default:
+        return <ArrowUpRight className="w-6 h-6" />;
+    }
+  };
 
   // Weekly Activity Bar Chart Data
   const weeklyData = {
@@ -156,9 +182,20 @@ export default function DashboardView({ onSeeAllCards, onSeeAllTransactions }) {
   };
 
   const handleSend = () => {
-    if (!transferAmount || isNaN(transferAmount)) return;
-    setTransferSuccess(true);
-    setTimeout(() => setTransferSuccess(false), 3000);
+    if (!transferAmount || isNaN(parseFloat(transferAmount)) || isSending) return;
+
+    setIsSending(true);
+    
+    // Simulate smooth responsive sending delay for user feedback
+    setTimeout(() => {
+      const recipient = contacts[selectedUser] || contacts[0];
+      if (onSendMoney) {
+        onSendMoney(recipient.name, transferAmount);
+      }
+      setIsSending(false);
+      setTransferSuccess(true);
+      setTimeout(() => setTransferSuccess(false), 3500);
+    }, 400);
   };
 
   return (
@@ -207,48 +244,26 @@ export default function DashboardView({ onSeeAllCards, onSeeAllTransactions }) {
             </button>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between h-[224px] space-y-4">
-            {/* Spotify */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center">
-                  <CardIcon className="w-6 h-6" />
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between min-h-[224px] space-y-4">
+            {transactions.slice(0, 3).map((tx, idx) => {
+              const isPositive = tx.amount > 0;
+              return (
+                <div key={idx} className="flex items-center justify-between transition-all hover:translate-x-1">
+                  <div className="flex items-center space-x-4">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${tx.iconBg}`}>
+                      {renderIcon(tx.iconType)}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-800 text-sm">{tx.description}</h4>
+                      <p className="text-xs text-slate-400">{tx.date}</p>
+                    </div>
+                  </div>
+                  <span className={`font-bold text-sm ${isPositive ? 'text-emerald-500' : 'text-red-500'}`}>
+                    {isPositive ? `+$${tx.amount.toLocaleString()}` : `-$${Math.abs(tx.amount).toLocaleString()}`}
+                  </span>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-slate-800 text-sm">Spotify Subscription</h4>
-                  <p className="text-xs text-slate-400">28 January 2025</p>
-                </div>
-              </div>
-              <span className="font-bold text-red-500 text-sm">-$2,500</span>
-            </div>
-
-            {/* Freepik */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center">
-                  <DollarSign className="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-slate-800 text-sm">Freepik Sales</h4>
-                  <p className="text-xs text-slate-400">25 January 2025</p>
-                </div>
-              </div>
-              <span className="font-bold text-emerald-500 text-sm">+$750</span>
-            </div>
-
-            {/* Mobile Service */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
-                  <Smartphone className="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-slate-800 text-sm">Mobile Service</h4>
-                  <p className="text-xs text-slate-400">20 January 2025</p>
-                </div>
-              </div>
-              <span className="font-bold text-red-500 text-sm">-$150</span>
-            </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -284,11 +299,11 @@ export default function DashboardView({ onSeeAllCards, onSeeAllTransactions }) {
                 <div 
                   key={index}
                   onClick={() => setSelectedUser(index)}
-                  className={`flex flex-col items-center cursor-pointer p-2 rounded-2xl transition-all ${
-                    selectedUser === index ? 'bg-slate-50 ring-2 ring-blue-500' : 'hover:bg-slate-50'
+                  className={`flex flex-col items-center cursor-pointer p-2.5 rounded-2xl transition-all transform active:scale-95 ${
+                    selectedUser === index ? 'bg-blue-50/80 ring-2 ring-blue-500' : 'hover:bg-slate-50'
                   }`}
                 >
-                  <div className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg mb-2 ${contact.bg}`}>
+                  <div className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg mb-2 shadow-sm ${contact.bg}`}>
                     {contact.avatar}
                   </div>
                   <p className="text-xs font-semibold text-slate-800 text-center whitespace-nowrap">{contact.name}</p>
@@ -296,7 +311,7 @@ export default function DashboardView({ onSeeAllCards, onSeeAllTransactions }) {
                 </div>
               ))}
 
-              <button className="w-12 h-12 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center shrink-0">
+              <button className="w-12 h-12 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center shrink-0 transition-all">
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
@@ -306,24 +321,40 @@ export default function DashboardView({ onSeeAllCards, onSeeAllTransactions }) {
               <div className="flex items-center justify-between">
                 <span className="text-xs text-slate-400 font-medium">Write Amount</span>
                 {transferSuccess && (
-                  <span className="text-xs text-emerald-600 font-semibold flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> Sent successfully!
+                  <span className="text-xs text-emerald-600 font-semibold flex items-center gap-1 animate-pulse">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Sent & added to transactions!
                   </span>
                 )}
               </div>
               <div className="relative flex items-center">
                 <input
-                  type="text"
+                  type="number"
+                  step="0.01"
                   value={transferAmount}
                   onChange={(e) => setTransferAmount(e.target.value)}
-                  className="w-full bg-slate-100 text-slate-800 font-bold rounded-full py-3.5 pl-6 pr-36 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  placeholder="525.00"
+                  className="w-full bg-slate-100 text-slate-800 font-bold rounded-full py-3.5 pl-6 pr-36 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
                 />
                 <button
                   onClick={handleSend}
-                  className="absolute right-1 top-1 bottom-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-6 rounded-full flex items-center space-x-2 shadow-md transition-all active:scale-95"
+                  disabled={isSending}
+                  className={`
+                    absolute right-1 top-1 bottom-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm 
+                    px-6 rounded-full flex items-center space-x-2 shadow-md transition-all active:scale-95
+                    ${isSending ? 'opacity-80 cursor-not-allowed' : 'hover:shadow-lg'}
+                  `}
                 >
-                  <span>Send</span>
-                  <Send className="w-4 h-4" />
+                  {isSending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Send</span>
+                      <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </>
+                  )}
                 </button>
               </div>
             </div>

@@ -15,6 +15,83 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Centralized Transactions State
+  const [transactions, setTransactions] = useState([
+    {
+      id: '#12548796',
+      description: 'Spotify Subscription',
+      type: 'Shopping',
+      card: '3778 ****',
+      date: '28 Jan, 12:30 PM',
+      amount: -2500,
+      category: 'expense',
+      iconType: 'card',
+      iconBg: 'bg-amber-100 text-amber-600'
+    },
+    {
+      id: '#12548796',
+      description: 'Freepik Sales',
+      type: 'Transfer',
+      card: '3778 ****',
+      date: '25 Jan, 10:40 AM',
+      amount: 750,
+      category: 'income',
+      iconType: 'dollar',
+      iconBg: 'bg-teal-100 text-teal-600'
+    },
+    {
+      id: '#12548796',
+      description: 'Mobile Service',
+      type: 'Service',
+      card: '3778 ****',
+      date: '20 Jan, 10:40 AM',
+      amount: -150,
+      category: 'expense',
+      iconType: 'phone',
+      iconBg: 'bg-blue-100 text-blue-600'
+    },
+    {
+      id: '#12548796',
+      description: 'Wilson',
+      type: 'Transfer',
+      card: '3778 ****',
+      date: '15 Jan, 3:29 AM',
+      amount: -1050,
+      category: 'expense',
+      iconType: 'send',
+      iconBg: 'bg-rose-100 text-rose-500'
+    },
+    {
+      id: '#12548796',
+      description: 'Emily',
+      type: 'Transfer',
+      card: '3778 ****',
+      date: '14 Jan, 10:40 AM',
+      amount: 840,
+      category: 'income',
+      iconType: 'income',
+      iconBg: 'bg-emerald-100 text-emerald-500'
+    }
+  ]);
+
+  // Handler to add a new transaction dynamically from Quick Transfer
+  const handleSendMoney = (recipientName, amount) => {
+    const numAmount = parseFloat(amount) || 525;
+    const newTx = {
+      id: `#${Math.floor(10000000 + Math.random() * 90000000)}`,
+      description: `Transfer to ${recipientName}`,
+      type: 'Transfer',
+      card: '3778 ****',
+      date: 'Just now',
+      amount: -Math.abs(numAmount),
+      category: 'expense',
+      iconType: 'send',
+      iconBg: 'bg-blue-100 text-blue-600'
+    };
+
+    setTransactions(prev => [newTx, ...prev]);
+  };
+
   // Map active tab to top header title
   const pageTitles = {
     'dashboard': 'Overview',
@@ -33,6 +110,8 @@ export default function App() {
       case 'dashboard':
         return (
           <DashboardView 
+            transactions={transactions}
+            onSendMoney={handleSendMoney}
             onSeeAllCards={() => setActiveTab('credit-cards')}
             onSeeAllTransactions={() => setActiveTab('transactions')}
           />
@@ -40,12 +119,14 @@ export default function App() {
       case 'transactions':
         return (
           <TransactionsView 
+            transactions={transactions}
             onAddCardClick={() => setActiveTab('credit-cards')}
           />
         );
       case 'accounts':
         return (
           <AccountsView 
+            transactions={transactions}
             onSeeAllCards={() => setActiveTab('credit-cards')}
             onSeeAllTransactions={() => setActiveTab('transactions')}
           />
@@ -65,6 +146,8 @@ export default function App() {
       default:
         return (
           <DashboardView 
+            transactions={transactions}
+            onSendMoney={handleSendMoney}
             onSeeAllCards={() => setActiveTab('credit-cards')}
             onSeeAllTransactions={() => setActiveTab('transactions')}
           />
