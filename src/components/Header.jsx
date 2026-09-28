@@ -54,7 +54,7 @@ export default function Header({ title, onMenuToggle, onSettingsClick }) {
           onClick={onSettingsClick}
           className="w-11 h-11 rounded-full bg-amber-200 border-2 border-amber-300 flex items-center justify-center font-bold text-amber-900 cursor-pointer shadow-sm hover:ring-2 hover:ring-blue-500 transition-all"
         >
-          CR
+          SK
         </div>
       </div>
     </header>
